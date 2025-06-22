@@ -12,7 +12,7 @@ import json
 from aiogram import Bot
 user_models_file = 'user_models.json'
 products_finally = []
-tracked_model = ['Apple']
+tracked_model = []
 
 site = 'https://www.mvideo.ru/noutbuki-planshety-komputery-8/noutbuki-118?from=homepage&page='
 def scroll_page(driver):
