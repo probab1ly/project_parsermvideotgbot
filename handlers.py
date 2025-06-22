@@ -1,8 +1,6 @@
 from aiogram import Router, F, Bot
 from aiogram.types import Message, CallbackQuery
 from aiogram.filters import Command
-from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import State, StatesGroup
 from parsing import (
     parse, products_finally, main_checkpricesandnotify,
     activateadd, deactivateremove, get_active_users, periodcheck, add_model_for_user,
@@ -13,10 +11,6 @@ chat_id = 1653541807
 # prices_file = 'parser.csv'
 # users_file = 'activate_users.txt'
 router = Router()
-class AddModelStates(StatesGroup):
-    waiting_for_model_name = State()
-class RemoveModelStates(StatesGroup):
-    waiting_for_model_name = State()
 
 @router.message(Command('start'))
 async def start_main(message: Message):
