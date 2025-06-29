@@ -21,12 +21,12 @@ async def start_main(message: Message):
 @router.message(F.text == '✅Activate')
 async def activatefunc(message: Message):
     await activateadd(message.from_user.id)
-    await message.answer('✅ Уведомления активированы!\n Теперь вы будете получать оповещения о смене цен')
+    await message.answer('✅ Уведомления активированы!\nТеперь вы будете получать оповещения о смене цен')
 
 @router.message(F.text == '❌Deactivate')
 async def deactivatefunc(message: Message):
     await deactivateremove(message.from_user.id)
-    await message.answer('❌ Уведомления отключены.\n Вы не будете получать оповещения.')
+    await message.answer('❌ Уведомления отключены.\nВы не будете получать оповещения.')
 
 @router.message(F.text == 'Добавить модель')
 async def add_model_button(message: Message):
