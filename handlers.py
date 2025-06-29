@@ -7,7 +7,6 @@ from parsing import (
     remove_model_for_user, get_models_for_user)
 from keyboard import takethemodel, mainkeyboard
 import asyncio
-chat_id = 1653541807
 # prices_file = 'parser.csv'
 # users_file = 'activate_users.txt'
 router = Router()
