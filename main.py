@@ -9,7 +9,10 @@ async def main():
     bot = Bot('8198291115:AAFwKUlXZll4_f0GmN-EMGAS-jsrvHVPrPc')
     dp = Dispatcher()
     dp.include_router(router)
-    asyncio.create_task(periodcheck(bot))
+    try:
+        asyncio.create_task(periodcheck(bot))
+    except Exception as e:
+        print(f"Ошибка в задаче: {e}")
     await dp.start_polling(bot)
 
 if __name__ == '__main__':
