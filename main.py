@@ -6,7 +6,7 @@ from parsing import periodcheck
 
 async def main():
     logging.basicConfig(level=logging.INFO)
-    bot = Bot('8198291115:AAFwKUlXZll4_f0GmN-EMGAS-jsrvHVPrPc')
+    bot = Bot('')
     dp = Dispatcher()
     dp.include_router(router)
     try:
