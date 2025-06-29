@@ -12,7 +12,7 @@ import json
 from aiogram import Bot
 user_models_file = 'user_models.json'
 products_finally = []
-tracked_model = []
+tracked_model = ['Apple']
 
 site = 'https://www.mvideo.ru/noutbuki-planshety-komputery-8/noutbuki-118?from=homepage&page='
 def scroll_page(driver):
@@ -53,7 +53,7 @@ def parse():
     try:
         for i in range(1, 2):
             driver.get(f'{site}{i}')
-            time.sleep(5)
+            time.sleep(8)
             scroll_page(driver)
             products = driver.find_elements(By.CLASS_NAME, "product-cards-layout__item")
             print(f'Найдено товаров: {len(products)}')
@@ -110,10 +110,8 @@ def save_to_excel(file='parser.xlsx'):
 def save_to_json_and_csv():
     with open('parser.json', 'w', encoding='utf-8') as file1:
         json.dump(products_finally, file1, indent=4, ensure_ascii=False)
-
-    with open('parser.csv', 'w', newline='') as file2:
-        csv_writer = csv.writer(file2)
-        csv_writer.writerows(products_finally)
+    df = pd.DataFrame(products_finally)
+    df.to_csv('parser.csv', index=False)
 def filterdf(tracked_model):
     df = pd.DataFrame(products_finally)
     df = df[df['name'].str.contains('|'.join(tracked_model), case=False, na=False)]
@@ -126,7 +124,8 @@ async def main_checkpricesandnotify(tracked_model, bot):
         except Exception as e:
             print(f'Произошла ошибка: {e}')
     else:
-        old_df = pd.DataFrame(columns=['name', 'pricewithoutsell'])
+        old_df = pd.DataFrame(columns=['name', 'pricewithsell'])
+    products_finally.clear()
     parse()
     save_to_json_and_csv()
     save_to_excel()
@@ -140,13 +139,13 @@ async def main_checkpricesandnotify(tracked_model, bot):
         for _, row in df.iterrows():
             name = row['name']
             try:
-                price = int(str(row['pricewithoutsell']).replace(' ', ''))
+                price = int(str(row['pricewithsell']).replace(' ', ''))
             except:
                 price = None
             old_price_row = old_df[old_df['name'] == name]
             if not old_price_row.empty:
                 try:
-                    old_price = int(str(old_price_row.iloc[0]['pricewithoutsell']).replace(' ', ''))
+                    old_price = int(str(old_price_row.iloc[0]['pricewithsell']).replace(' ', ''))
                 except:
                     old_price = None
                 if old_price is not None and price != old_price:
@@ -162,12 +161,15 @@ async def main_checkpricesandnotify(tracked_model, bot):
     for user_id in users:
         all_models.update(get_models_for_user(user_id))
     df_all = filterdf(list(all_models))
-    df_all = df_all.drop_duplicates(subset=['name', 'pricewithoutsell'])
-    df_all[['name', 'pricewithoutsell']].to_csv('parser.csv', index=False)
+    df_all = df_all.drop_duplicates(subset=['name', 'pricewithsell'])
+    df_all[['name', 'pricewithsell']].to_csv('parser.csv', index=False)
 
 async def periodcheck(bot):
     while True:
-        await main_checkpricesandnotify(tracked_model, bot)
+        try:
+            await main_checkpricesandnotify(tracked_model, bot)
+        except Exception as e:
+            print(f'Ошибка в periodcheck: {e}')
         await asyncio.sleep(30)
 
 async def get_active_users():
