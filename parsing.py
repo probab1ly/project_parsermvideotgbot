@@ -12,7 +12,7 @@ import json
 from aiogram import Bot
 user_models_file = 'user_models.json'
 products_finally = []
-tracked_model = ['Apple']
+# tracked_model = []
 
 site = 'https://www.mvideo.ru/noutbuki-planshety-komputery-8/noutbuki-118?from=homepage&page='
 def scroll_page(driver):
@@ -170,7 +170,7 @@ async def periodcheck(bot):
             await main_checkpricesandnotify(tracked_model, bot)
         except Exception as e:
             print(f'Ошибка в periodcheck: {e}')
-        await asyncio.sleep(30)
+        await asyncio.sleep(86400)
 
 async def get_active_users():
     if not os.path.exists('activate_users.txt'):
